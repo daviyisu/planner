@@ -7,4 +7,3 @@ import com._8.planner.users.domain.User;
 public interface FindUserByIdUseCase {
     Optional<User> findById(Long id);
 }
-

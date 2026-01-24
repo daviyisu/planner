@@ -22,4 +22,9 @@ public class UserRepositoryAdapter implements UserRepository {
                 .findById(id)
                 .map(UserMapper::toDomain);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        jpaRepository.deleteById(id);
+    }
 }
