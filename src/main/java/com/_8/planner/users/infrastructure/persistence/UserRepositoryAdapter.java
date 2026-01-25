@@ -27,4 +27,11 @@ public class UserRepositoryAdapter implements UserRepository {
     public void deleteById(Long id) {
         jpaRepository.deleteById(id);
     }
+
+    @Override
+    public User save(User newUser) {
+        UserEntity userEntity = UserMapper.toEntity(newUser);
+        UserEntity savedEntity = jpaRepository.save(userEntity);
+        return UserMapper.toDomain(savedEntity);
+    }
 }

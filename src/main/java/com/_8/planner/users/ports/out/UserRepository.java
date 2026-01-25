@@ -6,4 +6,5 @@ import com._8.planner.users.domain.User;
 public interface UserRepository {
     Optional<User> findById(Long id);
     void deleteById(Long id);
+    User save(User newUser);
 }
