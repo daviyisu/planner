@@ -7,6 +7,18 @@ import lombok.Getter;
 @AllArgsConstructor
 public class User {
     private final Long id;
-    private final String name;
-    private final String email;
+    private String name;
+    private String email;
+
+    public void changeName(String newName) {
+        if (newName != null && !newName.isBlank()) {
+            this.name = newName;
+        }
+    }
+
+    public void changeEmail(String newEmail) {
+        if (newEmail != null && !newEmail.isBlank()) {
+            this.email = newEmail;
+        }
+    }
 }

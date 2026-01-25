@@ -7,11 +7,16 @@ import com._8.planner.users.domain.User;
 import com._8.planner.users.ports.in.CreateUserUseCase;
 import com._8.planner.users.ports.in.DeleteUserByIdUseCase;
 import com._8.planner.users.ports.in.FindUserByIdUseCase;
+import com._8.planner.users.ports.in.PatchUserCommand;
+import com._8.planner.users.ports.in.PatchUserUseCase;
+
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,12 +28,14 @@ public class UserController {
     private final FindUserByIdUseCase findUserById;
     private final DeleteUserByIdUseCase deleteUserById;
     private final CreateUserUseCase createUser;
+    private final PatchUserUseCase patchUser;
 
     public UserController(FindUserByIdUseCase findUserById, DeleteUserByIdUseCase deleteUserById,
-            CreateUserUseCase createUser) {
+            CreateUserUseCase createUser, PatchUserUseCase patchUserUseCase) {
         this.findUserById = findUserById;
         this.deleteUserById = deleteUserById;
         this.createUser = createUser;
+        this.patchUser = patchUserUseCase;
     }
 
     @GetMapping("/{id}")
@@ -51,6 +58,16 @@ public class UserController {
         final User newUser = createUser.createUser(newUserRequest.getName(), newUserRequest.getEmail());
         UserResponse userResponse = UserHttpMapper.toResponse(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponse> patchUser(@PathVariable Long id,
+            @RequestBody UpdateUserRequest updateUserRequest) {
+        PatchUserCommand patchUserCommand = new PatchUserCommand(Optional.ofNullable(updateUserRequest.getName()),
+                Optional.ofNullable(updateUserRequest.getEmail()));
+        final User uptadedUser = patchUser.patchUser(id, patchUserCommand);
+        UserResponse userResponse = UserHttpMapper.toResponse(uptadedUser);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userResponse);
     }
 
 }
