@@ -3,7 +3,7 @@ package com._8.planner.users.application;
 import org.springframework.stereotype.Service;
 
 import com._8.planner.users.domain.User;
-import com._8.planner.users.domain.UserNotFoundException;
+import com._8.planner.users.domain.exceptions.UserNotFoundException;
 import com._8.planner.users.ports.in.PatchUserCommand;
 import com._8.planner.users.ports.in.PatchUserUseCase;
 import com._8.planner.users.ports.out.UserRepository;

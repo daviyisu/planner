@@ -7,14 +7,15 @@ import org.springframework.stereotype.Component;
 import com._8.planner.users.domain.User;
 import com._8.planner.users.ports.out.UserRepository;
 
+import jakarta.persistence.EntityManager;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Component
 public class UserRepositoryAdapter implements UserRepository {
 
     private final UserJpaRepository jpaRepository;
-
-    public UserRepositoryAdapter(UserJpaRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
-    }
+    private final EntityManager entityManager;
 
     @Override
     public Optional<User> findById(Long id) {
@@ -30,7 +31,7 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public User save(User newUser) {
-        UserEntity userEntity = UserMapper.toEntity(newUser);
+        UserEntity userEntity = UserMapper.toEntity(newUser, entityManager);
         UserEntity savedEntity = jpaRepository.save(userEntity);
         return UserMapper.toDomain(savedEntity);
     }

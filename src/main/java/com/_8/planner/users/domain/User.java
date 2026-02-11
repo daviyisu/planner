@@ -1,5 +1,10 @@
 package com._8.planner.users.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com._8.planner.users.domain.exceptions.AlreadySubscribedException;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,6 +14,7 @@ public class User {
     private final Long id;
     private String name;
     private String email;
+    private Set<EventSubscription> subscriptions = new HashSet<>();
 
     public void changeName(String newName) {
         if (newName != null && !newName.isBlank()) {
@@ -20,5 +26,18 @@ public class User {
         if (newEmail != null && !newEmail.isBlank()) {
             this.email = newEmail;
         }
+    }
+
+    public void subscribeTo(Long eventId) {
+        EventSubscription subscription = EventSubscription.create(this.id, eventId);
+        if (!subscriptions.add(subscription)) {
+            throw new AlreadySubscribedException(this.id, eventId);
+        }
+    }
+
+    public User(Long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
     }
 }

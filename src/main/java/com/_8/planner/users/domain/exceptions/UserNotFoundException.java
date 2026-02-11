@@ -1,4 +1,4 @@
-package com._8.planner.users.domain;
+package com._8.planner.users.domain.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(Long id) {

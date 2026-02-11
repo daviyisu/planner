@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com._8.planner.users.domain.UserNotFoundException;
+import com._8.planner.users.domain.exceptions.UserNotFoundException;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
