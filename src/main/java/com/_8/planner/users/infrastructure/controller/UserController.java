@@ -9,6 +9,9 @@ import com._8.planner.users.ports.in.DeleteUserByIdUseCase;
 import com._8.planner.users.ports.in.FindUserByIdUseCase;
 import com._8.planner.users.ports.in.PatchUserCommand;
 import com._8.planner.users.ports.in.PatchUserUseCase;
+import com._8.planner.users.ports.in.SubscribeToEventUseCase;
+
+import lombok.AllArgsConstructor;
 
 import java.util.Optional;
 
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
@@ -29,14 +33,7 @@ public class UserController {
     private final DeleteUserByIdUseCase deleteUserById;
     private final CreateUserUseCase createUser;
     private final PatchUserUseCase patchUser;
-
-    public UserController(FindUserByIdUseCase findUserById, DeleteUserByIdUseCase deleteUserById,
-            CreateUserUseCase createUser, PatchUserUseCase patchUserUseCase) {
-        this.findUserById = findUserById;
-        this.deleteUserById = deleteUserById;
-        this.createUser = createUser;
-        this.patchUser = patchUserUseCase;
-    }
+    private final SubscribeToEventUseCase subscribeToEvent;
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getById(@PathVariable Long id) {
@@ -70,4 +67,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userResponse);
     }
 
+    @PostMapping("/{userId}/subscribe/{eventId}")
+    public ResponseEntity<Void> postMethodName(@PathVariable Long userId, @PathVariable Long eventId) {
+        subscribeToEvent.subscribeToEvent(userId, eventId);
+        return ResponseEntity.noContent().build();
+    }
 }

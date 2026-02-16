@@ -1,9 +1,16 @@
 package com._8.planner.users.infrastructure.persistence;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,4 +31,20 @@ public class UserEntity {
 
     private String name;
     private String email;
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EventSubscriptionEntity> subscriptions = new HashSet<>();
+
+    @PrePersist
+    public void prePersistSubscribedAt() {
+        this.setCreatedAt(LocalDateTime.now());
+    }
+
+    public UserEntity(Long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
 }
