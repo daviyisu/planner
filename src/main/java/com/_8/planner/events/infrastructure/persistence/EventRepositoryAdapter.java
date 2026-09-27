@@ -1,7 +1,9 @@
 package com._8.planner.events.infrastructure.persistence;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com._8.planner.events.domain.Event;
@@ -24,5 +26,10 @@ public class EventRepositoryAdapter implements EventRepository {
     @Override
     public Optional<Event> findById(Long eventId) {
         return jpaRepository.findById(eventId).map(EventMapper::toDomain);
+    }
+
+    @Override
+    public List<Event> findAll() {
+        return jpaRepository.findAll(Sort.by("eventDate", "id")).stream().map(EventMapper::toDomain).toList();
     }
 }

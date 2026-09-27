@@ -10,6 +10,9 @@ import com._8.planner.users.ports.in.FindUserByIdUseCase;
 import com._8.planner.users.ports.in.PatchUserCommand;
 import com._8.planner.users.ports.in.PatchUserUseCase;
 import com._8.planner.users.ports.in.SubscribeToEventUseCase;
+import com._8.planner.users.ports.in.UnsubscribeFromEventUseCase;
+
+import jakarta.validation.Valid;
 
 import lombok.AllArgsConstructor;
 
@@ -34,6 +37,7 @@ public class UserController {
     private final CreateUserUseCase createUser;
     private final PatchUserUseCase patchUser;
     private final SubscribeToEventUseCase subscribeToEvent;
+    private final UnsubscribeFromEventUseCase unsubscribeFromEvent;
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getById(@PathVariable Long id) {
@@ -51,7 +55,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest newUserRequest) {
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest newUserRequest) {
         final User newUser = createUser.createUser(newUserRequest.getName(), newUserRequest.getEmail());
         UserResponse userResponse = UserHttpMapper.toResponse(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
@@ -59,7 +63,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponse> patchUser(@PathVariable Long id,
-            @RequestBody UpdateUserRequest updateUserRequest) {
+            @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         PatchUserCommand patchUserCommand = new PatchUserCommand(Optional.ofNullable(updateUserRequest.getName()),
                 Optional.ofNullable(updateUserRequest.getEmail()));
         final User uptadedUser = patchUser.patchUser(id, patchUserCommand);
@@ -68,8 +72,14 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/subscribe/{eventId}")
-    public ResponseEntity<Void> postMethodName(@PathVariable Long userId, @PathVariable Long eventId) {
+    public ResponseEntity<Void> subscribeToEvent(@PathVariable Long userId, @PathVariable Long eventId) {
         subscribeToEvent.subscribeToEvent(userId, eventId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{userId}/subscribe/{eventId}")
+    public ResponseEntity<Void> unsubscribeFromEvent(@PathVariable Long userId, @PathVariable Long eventId) {
+        unsubscribeFromEvent.unsubscribeFromEvent(userId, eventId);
         return ResponseEntity.noContent().build();
     }
 }

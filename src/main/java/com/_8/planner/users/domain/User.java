@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com._8.planner.users.domain.exceptions.AlreadySubscribedException;
+import com._8.planner.users.domain.exceptions.NotSubscribedException;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,12 @@ public class User {
         EventSubscription subscription = EventSubscription.create(this.id, eventId);
         if (!subscriptions.add(subscription)) {
             throw new AlreadySubscribedException(this.id, eventId);
+        }
+    }
+
+    public void unsubscribeFrom(Long eventId) {
+        if (!subscriptions.removeIf(sub -> sub.getEventId().equals(eventId))) {
+            throw new NotSubscribedException(this.id, eventId);
         }
     }
 
