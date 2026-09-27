@@ -35,6 +35,7 @@ public class EventEntity {
     private String description;
     @Column(nullable = false)
     private Date eventDate;
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)

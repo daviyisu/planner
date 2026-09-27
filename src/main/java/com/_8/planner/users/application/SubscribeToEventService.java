@@ -1,6 +1,7 @@
 package com._8.planner.users.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._8.planner.events.domain.Event;
 import com._8.planner.events.domain.exceptions.EventNotFoundException;
@@ -12,7 +13,6 @@ import com._8.planner.users.ports.in.SubscribeToEventUseCase;
 import com._8.planner.users.ports.out.EventSubscriptionRepository;
 import com._8.planner.users.ports.out.UserRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

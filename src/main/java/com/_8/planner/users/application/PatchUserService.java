@@ -1,6 +1,7 @@
 package com._8.planner.users.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._8.planner.users.domain.User;
 import com._8.planner.users.domain.exceptions.UserNotFoundException;
@@ -17,6 +18,7 @@ public class PatchUserService implements PatchUserUseCase {
     }
 
     @Override
+    @Transactional
     public User patchUser(Long id, PatchUserCommand patchUserCommand) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         patchUserCommand.getName().ifPresent(user::changeName);
